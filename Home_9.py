@@ -2,11 +2,26 @@
 contacts = {}
 
 
+def input_error(func):
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except KeyError:
+            return "Enter user name"
+        except ValueError:
+            return "Give me name and phone please"
+        except IndexError:
+            return "Invalid command format"
+    return wrapper
+
+
+@input_error
 def add_contact(name, phone):
     contacts[name] = phone
     return f"Contact {name} added with phone number: {phone}"
 
 
+@input_error
 def change_phone(name, new_phone):
     if name in contacts:
         contacts[name] = new_phone
@@ -15,6 +30,7 @@ def change_phone(name, new_phone):
         return f"Contact {name} not found"
 
 
+@input_error
 def get_phone(name):
     if name in contacts:
         return f"Phone number for {name}: {contacts[name]}"
@@ -22,6 +38,7 @@ def get_phone(name):
         return f"Contact {name} not found"
 
 
+@input_error
 def show_all_contacts():
     if contacts:
         result = "Contacts:\n"
